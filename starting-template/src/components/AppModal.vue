@@ -26,7 +26,7 @@
                 </h5>
                 <ul>
                     <li 
-                    v-for="(el,idx) in character.comics"
+                    v-for="(el,idx) in items"
                     :key="idx">
                         {{el.name}}
                     </li>
@@ -55,7 +55,12 @@
             closeModal: function () {
                 this.visible = false
             }
-        }
+        },
+        computed: {
+            items(){
+                return Array.isArray(this.character.comics) ? this.character.comics : this.character.comics.items;
+            }
+        },
     }
     
 </script>

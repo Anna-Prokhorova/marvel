@@ -2,7 +2,12 @@
     <nav class="navbar">
         <a href="#" class="navbar__logo">Marvel</a>
         <form class="search">
-            <input class="search__input" type="search" placeholder="Поиск..."/>
+            <input 
+            v-model="search"
+            @input="changeSearch(search)"
+            class="search__input" 
+            type="search" 
+            placeholder="Поиск..."/>
             <button class="search__button">все</button>
         </form>
     </nav>
@@ -11,8 +16,10 @@
 <script>
     export default {
         name: "AppHeader",
+        props: ['changeSearch'],
         data() {
             return {
+                search: ''
             }
         },
     }

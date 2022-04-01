@@ -1,14 +1,14 @@
 <template>
     <div id="app">
-        <app-header/>
-        <app-modal :character = "characters[characterIndex]" ref="modal"/>
-        <spinner/>
+        <app-header :changeSearch = "changeSearch"/>
+        <app-modal :character = "searchCharacters[characterIndex]" ref="modal"/>
             <section class="main">
+                <spinner v-if="loading"/>
                 <h1 class="main__caption">
                     Персонажи Марвел
                 </h1>
                 <div class="main__container">
-                    <div v-for="(el,idx) in characters"
+                    <div v-for="(el,idx) in searchCharacters"
                     :key="el.id"
                     class="card">
                         <div class="card__img">
@@ -52,6 +52,7 @@
                 loading: false,
                 characters: [],
                 characterIndex: 0,
+                search: '',
             }
         },
         methods: {
@@ -62,11 +63,23 @@
                 return fetch('https://netology-api-marvel.herokuapp.com/characters')
                         .then(res => res.json())
                         .then(json => this.characters = json)
+            },
+            changeSearch: function(value){
+                this.search = value
             }
         },
-        computed: {},
-        mounted(){
-            this.fetchCharacters()
+        computed: {
+            searchCharacters: function(){
+                const {characters, search} = this;
+                return characters.filter(character => {
+                    return character.name.toLowerCase().indexOf(search.toLowerCase()) !== -1
+                })
+            }
+        },
+        async mounted(){
+            this.loading = true
+            await this.fetchCharacters()
+            this.loading = false
         },
 };
 
@@ -162,6 +175,7 @@ a {
 .img {
     max-width: 100%;
     vertical-align: middle;
+    height: 100%;
 }
 
 .card__button {
